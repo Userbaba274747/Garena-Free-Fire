@@ -29,20 +29,33 @@ def main():
 
     # ==================== USER CONVERSATION HANDLERS ====================
 
-    # Deposit Conversation
-    deposit_conv = ConversationHandler(
-        entry_points=[CallbackQueryHandler(h.deposit_method, pattern="^deposit_(bkash|nagad|rocket|binance)$")],
-        states={
-            UserStates.WAITING_DEPOSIT_AMOUNT: [
-                MessageHandler(filters.TEXT & \~filters.COMMAND, h.receive_deposit_amount)
-            ],
-            UserStates.WAITING_TRX_ID: [
-                MessageHandler(filters.TEXT & \~filters.COMMAND, h.receive_trx_id)
-            ],
-        },
-        fallbacks=[CommandHandler("cancel", h.cancel)],
-        allow_reentry=True
-    )
+# Deposit Conversation
+deposit_conv = ConversationHandler(
+    entry_points=[
+        CallbackQueryHandler(
+            h.deposit_method,
+            pattern="^deposit_(bkash|nagad|rocket|binance)$"
+        )
+    ],
+    states={
+        UserStates.WAITING_DEPOSIT_AMOUNT: [
+            MessageHandler(
+                filters.TEXT & ~filters.COMMAND,
+                h.receive_deposit_amount
+            )
+        ],
+        UserStates.WAITING_TRX_ID: [
+            MessageHandler(
+                filters.TEXT & ~filters.COMMAND,
+                h.receive_trx_id
+            )
+        ],
+    },
+    fallbacks=[
+        CommandHandler("cancel", h.cancel)
+    ],
+    allow_reentry=True
+)
 
     # Order UID Conversation
     order_conv = ConversationHandler(
